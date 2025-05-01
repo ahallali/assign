@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/lib/dispatch';
-import { toggleTodo, deleteTodo, setFilter , clearCompleted } from '@/store/slices/todoSlice';
+import { toggleTodo, deleteTodo, setFilter , clearCompleted , toggleAll } from '@/store/slices/todoSlice';
 import TodoForm from '@/components/TodoForm';
 import TodoItem from '@/components/TodoItem';
 
@@ -39,20 +39,45 @@ export default function TodosPage() {
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
           <div className="flex justify-between items-center mb-6">
-            <div className="flex gap-2">
-              {['all', 'active', 'completed'].map((f) => (
+            <div className="flex items-center gap-4">
+              {todos.length > 0 && (
                 <button
-                  key={f}
-                  onClick={() => handleFilterChange(f as 'all' | 'active' | 'completed')}
-                  className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-                    filter === f
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                  }`}
+                  onClick={() => dispatch(toggleAll())}
+                  className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300"
                 >
-                  {f.charAt(0).toUpperCase() + f.slice(1)}
+                  <div className="w-5 h-5 rounded border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center">
+                    <svg
+                      className="w-4 h-4 text-blue-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <span>Toggle All</span>
                 </button>
-              ))}
+              )}
+              <div className="flex gap-2">
+                {['all', 'active', 'completed'].map((f) => (
+                  <button
+                    key={f}
+                    onClick={() => handleFilterChange(f as 'all' | 'active' | 'completed')}
+                    className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                      filter === f
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                    }`}
+                  >
+                    {f.charAt(0).toUpperCase() + f.slice(1)}
+                  </button>
+                ))}
+              </div>
             </div>
             <button
               onClick={() => dispatch(clearCompleted())}
