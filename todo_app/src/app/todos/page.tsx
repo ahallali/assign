@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/lib/dispatch';
-import { toggleTodo, deleteTodo, setFilter } from '@/store/slices/todoSlice';
+import { toggleTodo, deleteTodo, setFilter , clearCompleted } from '@/store/slices/todoSlice';
 import TodoForm from '@/components/TodoForm';
 import TodoItem from '@/components/TodoItem';
 
@@ -54,6 +54,28 @@ export default function TodosPage() {
                 </button>
               ))}
             </div>
+            <button
+              onClick={() => dispatch(clearCompleted())}
+              className="group relative p-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors duration-200 shadow-sm hover:shadow-md"
+              title="Clear Completed"
+            >
+              <svg
+                className="w-5 h-5 sm:w-6 sm:h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+              <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                Clear Completed
+              </span>
+            </button>
           </div>
           <div className="space-y-3">
             {filteredTodos.map((todo) => (

@@ -76,6 +76,7 @@ export default function Home() {
           ))}
         </div>
 
+
         <div className="mt-16 pb-20 text-center">
           <Link
             href="/signup"
