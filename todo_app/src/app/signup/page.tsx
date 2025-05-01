@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { signupSchema, type SignupFormData } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -10,6 +11,7 @@ import { signup } from '@/lib/auth';
 const SignUpPage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -24,7 +26,10 @@ const SignUpPage = () => {
     setLoading(true);
 
     try {
-      await signup(data.name, data.email, data.password);
+      const result = await signup(data.name, data.email, data.password);
+      if (result.success) {
+        router.push('/login');
+      }
     } catch (error) {
       setError('Failed to create account. Please try again.');
     } finally {

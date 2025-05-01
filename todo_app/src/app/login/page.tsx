@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { loginSchema, type LoginFormData } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -10,6 +11,7 @@ import { login } from '@/lib/auth';
 const LoginPage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -24,7 +26,10 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      await login(data.email, data.password);
+      const result = await login(data.email, data.password);
+      if (result.success) {
+        router.push('/todos');
+      }
     } catch (error) {
       setError('Invalid email or password');
     } finally {
