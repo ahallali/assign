@@ -11,10 +11,12 @@ interface Todo {
 
 interface TodoState {
   todos: Todo[];
+  filter: 'all' | 'active' | 'completed';
 }
 
 const initialState: TodoState = {
   todos: [],
+  filter: 'all',
 };
 
 const todoSlice = createSlice({
@@ -22,14 +24,7 @@ const todoSlice = createSlice({
   initialState,
   reducers: {
     addTodo: (state, action: PayloadAction<Todo>) => {
-      const newTodo: Todo = {
-        id: Date.now().toString(),
-        title: action.payload.title,
-        description: action.payload.description,
-        completed: false,
-        createdAt: new Date().toISOString(),
-      };
-      state.todos.push(newTodo);
+      state.todos.push(action.payload);
     },
     toggleTodo: (state, action: PayloadAction<string>) => {
       const todo = state.todos.find(todo => todo.id === action.payload);
@@ -47,9 +42,12 @@ const todoSlice = createSlice({
         todo.updatedAt = new Date().toISOString();
       }
     },
+    setFilter: (state, action: PayloadAction<'all' | 'active' | 'completed'>) => {
+      state.filter = action.payload;
+    },
   },
 });
 
-export const { addTodo, toggleTodo, deleteTodo, editTodo } = todoSlice.actions;
+export const { addTodo, toggleTodo, deleteTodo, editTodo, setFilter } = todoSlice.actions;
 export type { Todo };
 export default todoSlice.reducer; 
