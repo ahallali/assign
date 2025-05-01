@@ -49,8 +49,10 @@ const todoSlice = createSlice({
       state.todos = state.todos.filter((todo) => !todo.completed);
     },
     toggleAll: (state) => {
-      state.todos.forEach((todo) => {
-        todo.completed = !state.todos.every((t) => t.completed);
+      const allCompleted = state.todos.every(todo => todo.completed);
+      state.todos.forEach(todo => {
+        todo.completed = !allCompleted;
+        todo.updatedAt = new Date().toISOString();
       });
     },
   },
