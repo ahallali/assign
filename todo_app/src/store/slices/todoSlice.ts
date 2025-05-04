@@ -12,12 +12,14 @@ interface Todo {
 interface TodoState {
   todos: Todo[];
   filter: 'all' | 'active' | 'completed';
+  searchQuery: string;
 }
 
-const initialState: TodoState = {
-  todos: [],
-  filter: 'all',
-};
+    const initialState: TodoState = {
+      todos: [],
+      filter: 'all',
+      searchQuery: '',
+    };
 
 const todoSlice = createSlice({
   name: 'todos',
@@ -55,9 +57,12 @@ const todoSlice = createSlice({
         todo.updatedAt = new Date().toISOString();
       });
     },
+    setSearchQuery: (state, action: PayloadAction<string>) => {
+      state.searchQuery = action.payload;
+    },
   },
 });
 
-export const { addTodo, toggleTodo, deleteTodo, editTodo, setFilter, clearCompleted, toggleAll } = todoSlice.actions;
+export const { addTodo, toggleTodo, deleteTodo, editTodo, setFilter, clearCompleted, toggleAll, setSearchQuery } = todoSlice.actions;
 export type { Todo };
 export default todoSlice.reducer; 

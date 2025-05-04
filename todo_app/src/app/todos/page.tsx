@@ -2,25 +2,40 @@
 
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/lib/dispatch';
-import { toggleTodo, deleteTodo, setFilter , clearCompleted , toggleAll } from '@/store/slices/todoSlice';
+import { toggleTodo, deleteTodo, setFilter , clearCompleted , toggleAll , setSearchQuery } from '@/store/slices/todoSlice';
 import TodoForm from '@/components/TodoForm';
 import TodoItem from '@/components/TodoItem';
+import { useState } from 'react';
 
 export default function TodosPage() {
   const dispatch = useAppDispatch();
   const todos = useAppSelector((state) => state.todos.todos);
-  const filter = useAppSelector((state) => state.todos.filter);
+  const {filter,  searchQuery  } = useAppSelector((state) => state.todos);
   const allCompleted = todos.length > 0 && todos.every(todo => todo.completed);
-
+  const [showError, setShowError] = useState(false);
   const handleFilterChange = (newFilter: 'all' | 'active' | 'completed') => {
     dispatch(setFilter(newFilter));
   };
 
-  const filteredTodos = todos.filter(todo => {
-    if (filter === 'active') return !todo.completed;
-    if (filter === 'completed') return todo.completed;
-    return true;
-  });
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    dispatch(setSearchQuery(value));
+    setShowError(value !== '' && filteredTodos.length === 0);
+  };
+  
+
+  const filteredTodos = todos
+    .filter((todo) => {
+      const matchesFilter =
+        filter === 'all' || (filter === 'active' && !todo.completed) || (filter === 'completed' && todo.completed);
+      
+      const searchLower = searchQuery.toLowerCase();
+      const matchesSearch = searchQuery === '' || 
+        todo.title.toLowerCase().includes(searchLower) ||
+        (todo.description && todo.description.toLowerCase().includes(searchLower));
+      
+      return matchesFilter && matchesSearch;
+    });
 
   return (
     <div className="min-h-screen py-8 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
@@ -35,7 +50,20 @@ export default function TodosPage() {
             </button>
           </div>
         </div>
-
+        <div className="relative">
+              <input
+                type="text"
+                placeholder="Search todos..."
+                value={ searchQuery }
+                onChange={handleSearchChange}
+                className="w-full p-3 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-sm transition-all duration-300"
+              />
+        </div>
+        {showError && (
+          <div className="text-red-500 text-center mt-4">
+            No todos found matching your search
+          </div>
+        )}
         <TodoForm />
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
