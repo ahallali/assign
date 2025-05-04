@@ -2,15 +2,16 @@
 
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/lib/dispatch';
-import { toggleTodo, deleteTodo, setFilter , clearCompleted , toggleAll , setSearchQuery } from '@/store/slices/todoSlice';
+import { toggleTodo, deleteTodo, setFilter , clearCompleted , toggleAll , setSearchQuery , setSortField , setSortOrder } from '@/store/slices/todoSlice';
 import TodoForm from '@/components/TodoForm';
 import TodoItem from '@/components/TodoItem';
 import { useState } from 'react';
+import SortControls from '@/components/SortControls';
 
 export default function TodosPage() {
   const dispatch = useAppDispatch();
   const todos = useAppSelector((state) => state.todos.todos);
-  const {filter,  searchQuery  } = useAppSelector((state) => state.todos);
+  const {filter,  searchQuery , sortField, sortOrder } = useAppSelector((state) => state.todos);
   const allCompleted = todos.length > 0 && todos.every(todo => todo.completed);
   const [showError, setShowError] = useState(false);
   const handleFilterChange = (newFilter: 'all' | 'active' | 'completed') => {
@@ -28,13 +29,23 @@ export default function TodosPage() {
     .filter((todo) => {
       const matchesFilter =
         filter === 'all' || (filter === 'active' && !todo.completed) || (filter === 'completed' && todo.completed);
-      
-      const searchLower = searchQuery.toLowerCase();
-      const matchesSearch = searchQuery === '' || 
-        todo.title.toLowerCase().includes(searchLower) ||
-        (todo.description && todo.description.toLowerCase().includes(searchLower));
-      
+      const matchesSearch = todo.title.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesFilter && matchesSearch;
+    })
+    .sort((a, b) => {
+      let comparison = 0;
+      switch (sortField) {
+        case 'title':
+          comparison = a.title.localeCompare(b.title);
+          break;
+        case 'createdAt':
+          comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+          break;
+        case 'completed':
+          comparison = (a.completed ? 1 : 0) - (b.completed ? 1 : 0);
+          break;
+      }
+      return sortOrder === 'asc' ? comparison : -comparison;
     });
 
   return (
@@ -64,6 +75,7 @@ export default function TodosPage() {
             No todos found matching your search
           </div>
         )}
+        <SortControls />
         <TodoForm />
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">

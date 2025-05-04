@@ -1,5 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export type SortField = 'title' | 'createdAt' | 'completed';
+export type SortOrder = 'asc' | 'desc';
+
 interface Todo {
   id: string;
   title: string;
@@ -13,12 +16,16 @@ interface TodoState {
   todos: Todo[];
   filter: 'all' | 'active' | 'completed';
   searchQuery: string;
+  sortField: SortField;
+  sortOrder: SortOrder;
 }
 
     const initialState: TodoState = {
       todos: [],
       filter: 'all',
       searchQuery: '',
+      sortField: 'createdAt',
+      sortOrder: 'asc',
     };
 
 const todoSlice = createSlice({
@@ -60,9 +67,16 @@ const todoSlice = createSlice({
     setSearchQuery: (state, action: PayloadAction<string>) => {
       state.searchQuery = action.payload;
     },
+    setSortField: (state, action: PayloadAction<SortField>) => {
+      state.sortField = action.payload;
+    },
+    setSortOrder: (state, action: PayloadAction<SortOrder>) => {
+      state.sortOrder = action.payload;
+    },
   },
 });
 
-export const { addTodo, toggleTodo, deleteTodo, editTodo, setFilter, clearCompleted, toggleAll, setSearchQuery } = todoSlice.actions;
+export const { addTodo, toggleTodo, deleteTodo, editTodo, setFilter, clearCompleted, toggleAll, setSearchQuery ,  setSortField,
+  setSortOrder} = todoSlice.actions;
 export type { Todo };
 export default todoSlice.reducer; 
