@@ -7,6 +7,8 @@ import TodoForm from '@/components/TodoForm';
 import TodoItem from '@/components/TodoItem';
 import { useState } from 'react';
 import SortControls from '@/components/SortControls';
+import { useTheme } from '@/components/ThemeProvider';
+
 
 export default function TodosPage() {
   const dispatch = useAppDispatch();
@@ -14,6 +16,9 @@ export default function TodosPage() {
   const {filter,  searchQuery , sortField, sortOrder } = useAppSelector((state) => state.todos);
   const allCompleted = todos.length > 0 && todos.every(todo => todo.completed);
   const [showError, setShowError] = useState(false);
+  const { theme } = useTheme();
+
+
   const handleFilterChange = (newFilter: 'all' | 'active' | 'completed') => {
     dispatch(setFilter(newFilter));
   };
@@ -23,7 +28,7 @@ export default function TodosPage() {
     dispatch(setSearchQuery(value));
     setShowError(value !== '' && filteredTodos.length === 0);
   };
-  
+
 
   const filteredTodos = todos
     .filter((todo) => {
@@ -67,7 +72,7 @@ export default function TodosPage() {
                 placeholder="Search todos..."
                 value={ searchQuery }
                 onChange={handleSearchChange}
-                className="w-full p-3 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-sm transition-all duration-300"
+                className="w-full p-3 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-200 dark:border-gray-700 shadow-sm transition-all duration-300 text-gray-900 dark:text-white bg-white dark:bg-gray-800"
               />
         </div>
         {showError && (
