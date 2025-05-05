@@ -1,8 +1,19 @@
-import { render, screen, waitFor } from '@/utils/test-utils'
+import { render, screen, waitFor, fireEvent } from '@/utils/test-utils'
 import TodoForm from '@/components/TodoForm'
 import userEvent from '@testing-library/user-event'
 import { act } from '@testing-library/react'
 import { RootState } from '@/store/store'
+import '@testing-library/jest-dom'
+import { Provider } from 'react-redux'
+import { store } from '@/store/store'
+
+const renderWithRedux = (component: React.ReactElement) => {
+  return render(
+    <Provider store={store}>
+      {component}
+    </Provider>
+  )
+}
 
 describe('TodoForm', () => {
   const initialState: RootState = {
@@ -68,5 +79,24 @@ describe('TodoForm', () => {
     await waitFor(() => {
       expect(input).toHaveValue('')
     })
+  })
+
+  it('renders correctly', () => {
+    const { container } = renderWithRedux(<TodoForm />)
+    expect(container).toMatchSnapshot()
+  })
+
+  it('renders with error state', async () => {
+    const { container } = renderWithRedux(<TodoForm />)
+    const submitButton = screen.getByRole('button', { name: /add new todo/i })
+    fireEvent.click(submitButton)
+    expect(container).toMatchSnapshot()
+  })
+
+  it('renders with input value', () => {
+    const { container } = renderWithRedux(<TodoForm />)
+    const input = screen.getByPlaceholderText(/enter a new task/i)
+    fireEvent.change(input, { target: { value: 'Test Todo' } })
+    expect(container).toMatchSnapshot()
   })
 }) 

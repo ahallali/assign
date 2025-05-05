@@ -4,13 +4,13 @@ import React from 'react';
 import { useTheme } from './ThemeProvider';
 
 const ThemeButton = () => {
-  const { theme, ButtonTheme} = useTheme();
+  const { theme, ButtonTheme } = useTheme();
 
   return (
     <button
       onClick={ButtonTheme}
       className="fixed sm:bottom-8 sm:right-8 bottom-4 right-4 z-50 p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl border border-gray-800 dark:border-white transition-all duration-300"
-      aria-label="Button theme"
+      aria-label="Toggle theme"
     >
       {theme === 'dark' ? (
         <svg

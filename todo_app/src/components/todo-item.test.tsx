@@ -5,6 +5,8 @@ import '@testing-library/jest-dom'
 import { RootState } from '@/store/store'
 import userEvent from '@testing-library/user-event'
 import { act } from '@testing-library/react'
+import { Provider } from 'react-redux'
+import { store } from '@/store/store'
 
 interface Todo {
   id: string
@@ -31,6 +33,14 @@ describe('TodoItem', () => {
       sortField: 'createdAt',
       sortOrder: 'desc',
     },
+  }
+
+  const renderWithRedux = (component: React.ReactElement) => {
+    return render(
+      <Provider store={store}>
+        {component}
+      </Provider>
+    )
   }
 
   it('renders the todo item correctly', () => {
@@ -234,5 +244,28 @@ describe('TodoItem', () => {
     
     expect(screen.getByDisplayValue('Shift Enter Test')).toBeInTheDocument()
     expect(screen.queryByText('Shift Enter Test')).not.toBeInTheDocument()
+  })
+
+  it('renders correctly', () => {
+    const { container } = renderWithRedux(
+      <TodoItem todo={mockTodo} />
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  it('renders completed todo correctly', () => {
+    const { container } = renderWithRedux(
+      <TodoItem todo={{ ...mockTodo, completed: true }} />
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  it('renders in edit mode correctly', () => {
+    const { container } = renderWithRedux(
+      <TodoItem todo={mockTodo} />
+    )
+    const editButton = screen.getByRole('button', { name: /edit/i })
+    fireEvent.click(editButton)
+    expect(container).toMatchSnapshot()
   })
 }) 
