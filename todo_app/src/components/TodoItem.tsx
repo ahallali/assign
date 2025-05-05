@@ -51,6 +51,9 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
       <div className="flex items-start space-x-4">
         <button
           onClick={() => dispatch(toggleTodo(todo.id))}
+          role="checkbox"
+          aria-checked={todo.completed}
+          aria-label={`Mark "${todo.title}" as ${todo.completed ? 'incomplete' : 'complete'}`}
           className={`mt-1 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors duration-300 ${
             todo.completed
               ? 'bg-gradient-to-r from-green-400 to-blue-500 border-transparent'
@@ -126,6 +129,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
             <>
               <button
                 onClick={handleEdit}
+                aria-label="Save changes"
                 className="p-2 text-green-500 hover:text-green-600 dark:text-green-400 dark:hover:text-green-300 transition-colors duration-300"
               >
                 <svg
@@ -144,6 +148,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
               </button>
               <button
                 onClick={() => setIsEditing(false)}
+                aria-label="Cancel editing"
                 className="p-2 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-300"
               >
                 <svg
@@ -165,6 +170,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
             <>
               <button
                 onClick={() => setIsEditing(true)}
+                aria-label={`Edit "${todo.title}"`}
                 className="p-2 text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-300"
               >
                 <svg
@@ -183,6 +189,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
               </button>
               <button
                 onClick={() => dispatch(deleteTodo(todo.id))}
+                aria-label={`Delete "${todo.title}"`}
                 className="p-2 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-300"
               >
                 <svg

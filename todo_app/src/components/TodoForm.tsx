@@ -40,7 +40,8 @@ const TodoForm: React.FC = () => {
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="What needs to be done?"
+            placeholder="Enter a new task"
+            aria-label="New task title"
             className="w-full p-3 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-sm transition-all duration-300"
           />
           <svg
@@ -74,6 +75,7 @@ const TodoForm: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsExpanded(!isExpanded)}
+            aria-label={isExpanded ? 'Hide description' : 'Add description'}
             className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors duration-300"
           >
             {isExpanded ? 'Hide description' : 'Add description'}
@@ -82,6 +84,7 @@ const TodoForm: React.FC = () => {
           <button
             type="submit"
             disabled={!title.trim()}
+            aria-label="Add new todo"
             className={`px-4 py-2 rounded-lg transition-all duration-300 ${
               title.trim()
                 ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:shadow-xl'
