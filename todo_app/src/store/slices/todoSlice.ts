@@ -73,10 +73,11 @@ const todoSlice = createSlice({
     setSortOrder: (state, action: PayloadAction<SortOrder>) => {
       state.sortOrder = action.payload;
     },
+    resetStore: () => initialState,
   },
 });
 
-export const { addTodo, toggleTodo, deleteTodo, editTodo, setFilter, clearCompleted, toggleAll, setSearchQuery ,  setSortField,
-  setSortOrder} = todoSlice.actions;
+export const { addTodo, toggleTodo, deleteTodo, editTodo, setFilter, clearCompleted, toggleAll, setSearchQuery, setSortField,
+  setSortOrder, resetStore } = todoSlice.actions;
 export type { Todo };
 export default todoSlice.reducer; 

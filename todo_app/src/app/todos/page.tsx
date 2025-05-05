@@ -2,22 +2,29 @@
 
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/lib/dispatch';
-import { toggleTodo, deleteTodo, setFilter , clearCompleted , toggleAll , setSearchQuery , setSortField , setSortOrder } from '@/store/slices/todoSlice';
+import { toggleTodo, deleteTodo, setFilter , clearCompleted , toggleAll , setSearchQuery , setSortField , setSortOrder , resetStore } from '@/store/slices/todoSlice';
 import TodoForm from '@/components/TodoForm';
 import TodoItem from '@/components/TodoItem';
 import { useState } from 'react';
 import SortControls from '@/components/SortControls';
 import { useTheme } from '@/components/ThemeProvider';
+import { useRouter } from 'next/navigation';
 
 
 export default function TodosPage() {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const todos = useAppSelector((state) => state.todos.todos);
   const {filter,  searchQuery , sortField, sortOrder } = useAppSelector((state) => state.todos);
   const allCompleted = todos.length > 0 && todos.every(todo => todo.completed);
   const [showError, setShowError] = useState(false);
   const { theme } = useTheme();
 
+  const handleLogout = () => {
+    localStorage.clear();
+    dispatch(resetStore());
+    router.push('/login');
+  };
 
   const handleFilterChange = (newFilter: 'all' | 'active' | 'completed') => {
     dispatch(setFilter(newFilter));
@@ -61,7 +68,10 @@ export default function TodosPage() {
             Todo App
           </h1>
           <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-            <button className="px-4 py-2 rounded-lg bg-red-500 text-white shadow-lg hover:shadow-xl transition-all duration-300">
+            <button 
+              onClick={handleLogout}
+              className="px-4 py-2 rounded-lg bg-red-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-red-600"
+            >
               Logout
             </button>
           </div>
@@ -142,9 +152,13 @@ export default function TodosPage() {
             {filteredTodos.map((todo) => (
               <TodoItem key={todo.id} todo={todo} />
             ))}
-            {filteredTodos.length === 0 && (
+            {filteredTodos.length === 0 && !showError && (
               <p className="text-center text-gray-500 dark:text-gray-400 py-8">
-                No tasks yet. Add your first task to get started
+                {filter === 'active' 
+                  ? 'No active tasks. Add a new task or mark some as active'
+                  : filter === 'completed'
+                  ? 'No completed tasks yet. Complete some tasks to see them here'
+                  : 'No tasks yet. Add your first task to get started'}
               </p>
             )}
           </div>
