@@ -24,7 +24,6 @@ A modern, responsive Todo application built with Next.js, React, Redux, and Type
 1. Clone the repository:
 ```bash
 git clone https://github.com/ahallali/assign.git
-cd todo_app
 ```
 
 2. Install dependencies:
@@ -32,12 +31,7 @@ cd todo_app
 npm install
 ```
 
-3. Create a `.env.local` file in the root directory:
-```env
-NEXT_PUBLIC_API_URL=your_api_url
-```
-
-4. Start the development server:
+3. Start the development server:
 ```bash
 npm run dev
 ```
@@ -73,17 +67,6 @@ npm run test:coverage
 npm run test:watch
 ```
 
-### Code Quality
-
-1. Run ESLint to check code quality:
-```bash
-npm run lint
-```
-
-2. Fix ESLint issues automatically:
-```bash
-npm run lint -- --fix
-```
 
 ### Available Scripts
 
@@ -153,13 +136,6 @@ The project uses Jest's mocking capabilities for:
 - API calls
 - Browser APIs
 - React components
-
-Example of mocking a component:
-```typescript
-jest.mock('@/components/ComponentName', () => ({
-  ComponentName: ({ children }) => <div data-testid="mocked-component">{children}</div>
-}))
-```
 
 ## Project Structure
 
